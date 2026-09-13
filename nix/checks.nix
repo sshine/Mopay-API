@@ -4,6 +4,6 @@
   perSystem =
     { pkgs, ... }:
     {
-      checks.mobilepay-phase1 = pkgs.callPackage ./mobilepay-phase1.nix { };
+      checks.mobilepay-phase1 = pkgs.callPackage ./_mobilepay-phase1.nix { };
     };
 }
