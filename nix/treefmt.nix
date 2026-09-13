@@ -14,7 +14,7 @@
         # real diff rather than a reformat.
         settings.global.excludes = [ "openapi.yaml" ];
 
-        programs.nixfmt.enable = true;
+        programs.nixfmt.enable = false;
         programs.rustfmt = {
           enable = true;
           package = rust-toolchain;
