@@ -3,6 +3,7 @@
 # the page if it 404s. No SHA256 published by APKMirror for this variant.
 {
   fetchurl,
+  lib,
 }:
 fetchurl {
   name = "mobilepay-10.35.37-arm64.apk";
