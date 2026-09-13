@@ -1,0 +1,54 @@
+name: MobilePay recon
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'nix/mobilepay*.nix'
+      - 'flake.lock'
+      - '.github/workflows/mobilepay-recon.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'nix/mobilepay*.nix'
+      - 'flake.lock'
+      - '.github/workflows/mobilepay-recon.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  recon:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: ./.github/actions/setup-nix
+
+      - name: Realise MobilePay APK and run phase-1 recon
+        shell: bash
+        run: |
+          set -euo pipefail
+          nix build .#checks.x86_64-linux.mobilepay-phase1 -L
+          echo "--- phase1 report ---"
+          cat result/phase1_recon.md
+
+      - name: Derivation sizes (cache budget)
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "## Nix store closure sizes"
+          {
+            echo "| derivation | bytes | MiB |"
+            echo "|---|---:|---:|"
+            for d in mobilepay mobilepay-apkmirror mobilepay-phase1; do
+              path=$(nix path-info -S .#checks.x86_64-linux.$d 2>/dev/null || nix path-info -S .#$d 2>/dev/null || true)
+              if [ -n "$path" ]; then
+                bytes=$(nix path-info -S --json .#checks.x86_64-linux.$d 2>/dev/null | jq -r '.[0].narSize // empty' || echo 0)
+                mib=$(awk -v b="$bytes" 'BEGIN{printf "%.1f", b/1024/1024}')
+                echo "| $d | $bytes | $mib |"
+              fi
+            done
+          } | tee -a $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "GitHub public-repo Actions cache limit: **10 GB** per repository." >> $GITHUB_STEP_SUMMARY
