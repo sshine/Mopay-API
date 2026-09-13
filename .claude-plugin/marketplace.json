@@ -1,0 +1,20 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "sshine-mopay",
+  "description": "The Mopay MCP server, packaged as a Claude Code plugin.",
+  "owner": {
+    "name": "Simon Shine",
+    "url": "https://github.com/sshine"
+  },
+  "plugins": [
+    {
+      "name": "mopay",
+      "source": "./plugin",
+      "description": "Manage MobilePay through the mopay-mcp server: payments, accounts, and transactions.",
+      "version": "0.1.0",
+      "license": "MIT OR Apache-2.0",
+      "homepage": "https://github.com/sshine/Mopay-API/tree/main/crates/mopay-mcp",
+      "keywords": ["mopay", "mobilepay", "payments", "api"]
+    }
+  ]
+}

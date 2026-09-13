@@ -15,13 +15,13 @@
           # exactly the way the pre-commit hook would.
           config.treefmt.build.programs.mdformat
           config.hk-nix.package
-          pkgs.cargo-watch
-          pkgs.cargo-insta
           pkgs.deadnix
           pkgs.stdenv.cc
           pkgs.git
           pkgs.just
-          config.packages.cargo-readme
+          pkgs.cargo-readme
+          # `just check-version` reads the plugin manifests, which are JSON.
+          pkgs.jq
         ];
 
         env = [

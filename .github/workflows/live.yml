@@ -1,0 +1,32 @@
+name: Live API tests
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  live:
+    runs-on: ubuntu-latest
+
+    # Disable concurrency to avoid exhausting the rate-limit budget and sharing state.
+    concurrency:
+      group: live-api-tests
+      cancel-in-progress: false
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1, 2026-07-17
+      - uses: ./.github/actions/setup-nix
+
+      - name: Build the live API tests
+        run: nix develop -c cargo test --all-features --test live --no-run
+
+      - name: Run the live API tests
+        env:
+          SECRETSPEC_PROVIDER: env
+          MOPAY_SERVER: ${{ secrets.MOPAY_SERVER }}
+          MOPAY_USERNAME: ${{ secrets.MOPAY_USERNAME }}
+          MOPAY_API_KEY: ${{ secrets.MOPAY_API_KEY }}
+          MOPAY_TEST_DOMAIN: ${{ secrets.MOPAY_TEST_DOMAIN }}
+        run: nix develop -c just live-test

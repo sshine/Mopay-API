@@ -1,5 +1,5 @@
 {
-  description = "Mopay API";
+  description = "Mopay API client library";
 
   inputs = {
     nixpkgs.url = "https://nixos.org/channels/nixpkgs-unstable/nixexprs.tar.xz";
@@ -26,11 +26,6 @@
       inputs.flake-parts.follows = "flake-parts";
       inputs.treefmt-nix.follows = "treefmt-nix";
       inputs.import-tree.follows = "import-tree";
-    };
-
-    cargo-readme-src = {
-      url = "github:webern/cargo-readme";
-      flake = false;
     };
 
     import-tree.url = "github:vic/import-tree";

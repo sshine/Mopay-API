@@ -1,5 +1,3 @@
-# Git hooks via hk-nix. The generated hk.pkl is symlinked into the repo root by
-# the devshell startup hook (see devshell.nix); hk.pkl is gitignored.
 { inputs, ... }:
 {
   imports = [ inputs.hk-nix.flakeModules.default ];
@@ -11,25 +9,21 @@
       ...
     }:
     let
-      # Flags to reproduce the committed README.md from README.tpl and the CLI docs.
-      # --input is required because the crate has a lib target: cargo-readme would
-      # otherwise read lib.rs.
-      readmeArgs = "--project-root . --input src/main.rs --template README.tpl";
 
-      # Reference tools by absolute store path: the `nix flake check` hk-check sandbox
-      # runs hooks without the devshell PATH, so a bare `treefmt` is not found there.
+      # Uses tools by absolute store path: the `nix flake check` hk-check sandbox
+      # runs hooks without the devshell PATH, so a relative `treefmt` is not found.
       treefmt = lib.getExe config.treefmt.build.wrapper;
 
-      # Called by store path rather than via `cargo readme`, so the cargo-subcommand
-      # argv has to be supplied by hand: without it clap only prints its usage.
-      cargo-readme = "${lib.getExe' config.packages.cargo-readme "cargo-readme"} readme";
+      betterleaks = lib.getExe pkgs.betterleaks;
 
-      # cargo-readme emits markdown that mdformat then rewrites (link reference
-      # definitions move to the end of the file), so the raw output never equals the
-      # committed README.md and the two hooks would undo each other forever. Reuse
-      # treefmt's own mdformat so the plugin set cannot drift from the pre-commit one.
+      # Called by store path rather than via `cargo readme`, so argv needs fixing.
+      cargo-readme = "${lib.getExe' pkgs.cargo-readme "cargo-readme"} readme";
+      readmeArgs = "--project-root crates/mopay --input src/lib.rs --template ../../README.tpl";
+
+      # cargo-readme and mdformat disagree about placement of reference definitions
+      # (the placement of `[foo]: https://...`) because mdformat sees a bigger picture
+      # than README.tpl. To run both cargo-readme and mdformat, they're run in series.
       mdformat = config.treefmt.settings.formatter.mdformat.command;
-
       readme = "${cargo-readme} ${readmeArgs} | ${mdformat} -";
     in
     {
@@ -37,31 +31,22 @@
         "pre-commit" = {
           fix = true;
           stash = "git";
-          steps.treefmt = {
-            check = "${treefmt} --fail-on-change --no-cache {{files}}";
-            fix = "${treefmt} {{files}}";
+          steps = {
+            treefmt.check = "${treefmt} --fail-on-change --no-cache {{files}}";
+            treefmt.fix = "${treefmt} {{files}}";
+            betterleaks.check = "${betterleaks} dir --redact --no-banner --config .betterleaks.toml {{files}}";
           };
         };
 
         "pre-push".steps = {
-          deadnix = {
-            glob = "*.nix";
-            check = "${lib.getExe pkgs.deadnix} --fail {{files}}";
-          };
-          clippy = {
-            check = "cargo clippy --all-targets --all-features -- -D warnings";
-          };
-          readme = {
-            check = "${readme} | diff - README.md";
-            fix = "${readme} > README.md";
-          };
-          lock-check = {
-            check = "cargo metadata --locked --format-version 1 > /dev/null";
-          };
+          deadnix.glob = "*.nix";
+          deadnix.check = "${lib.getExe pkgs.deadnix} --fail {{files}}";
+          clippy.check = "cargo clippy --all-targets --all-features -- -D warnings";
+          readme.check = "${readme} | diff - README.md";
+          readme.fix = "${readme} > README.md";
+          lock-check.check = "cargo metadata --locked --format-version 1 > /dev/null";
         };
 
-        # hk runs this one itself, so no tool needs pinning. Note it has no
-        # equivalent of --require-scope; --allowed-types is the only policy knob.
         "commit-msg".steps.conventional.builtin = config.hk-nix.builtins.check_conventional_commit;
       };
     };

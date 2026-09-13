@@ -23,6 +23,3 @@ Thumbs.db
 
 # Agentic
 .claude/
-
-# Release artifacts
-/dist/
