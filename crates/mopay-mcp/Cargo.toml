@@ -1,0 +1,8 @@
+[package]
+name = "mopay-mcp"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+mopay = { path = "../mopay" }
