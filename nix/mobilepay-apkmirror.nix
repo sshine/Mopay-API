@@ -4,7 +4,7 @@
 #
 # Intentionally not evaluated by default CI — the download URL is time-limited.
 # Keep the expression for manual prefetching only.
-{ self, fetchurl }:
+{ fetchurl }:
 fetchurl {
   name = "mobilepay-10.35.37-arm64.apk";
   url = "https://www.apkmirror.com/apk/vipps-as/mobilepay/mobilepay-10-35-37-release/mobilepay-10-35-37-2-android-apk-download/download/?key=b6466057a1afc1f97e4738f776049cce6af534df";
