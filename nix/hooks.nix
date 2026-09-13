@@ -21,7 +21,7 @@
       readmeArgs = "--project-root crates/mopay --input src/lib.rs --template ../../README.tpl";
 
       # cargo-readme and mdformat disagree about placement of reference definitions
-      # (the placement of `[foo]: https://...`) because mdformat sees a bigger picture
+      # (the placement of `[foo]: https://...") because mdformat sees a bigger picture
       # than README.tpl. To run both cargo-readme and mdformat, they're run in series.
       mdformat = config.treefmt.settings.formatter.mdformat.command;
       readme = "${cargo-readme} ${readmeArgs} | ${mdformat} -";
