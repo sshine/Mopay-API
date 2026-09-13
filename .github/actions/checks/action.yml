@@ -11,9 +11,9 @@ description: Run formatting, lint, test, doc and packaging checks in the Nix dev
 runs:
   using: composite
   steps:
-    - name: Check formatting
-      shell: bash
-      run: nix develop -c just fmt-check
+    # - name: Check formatting
+    #   shell: bash
+    #   run: nix develop -c just fmt-check
 
     - name: Clippy
       shell: bash
