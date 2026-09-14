@@ -41,8 +41,18 @@ readme:
 readme-check:
     @echo "readme-check skipped (no README.tpl)"
 
+# Check Cargo.lock is up to date
+# Temporarily a no-op until fully wired
+lock-check:
+    @echo "lock-check skipped (not yet implemented)"
+
+# Check packaging (cargo package --list / dry-run)
+# Temporarily a no-op until fully wired
+package-check:
+    @echo "package-check skipped (not yet implemented)"
+
 # Run CI checks locally
-ci: fmt-check lint test doc readme-check build
+ci: fmt-check lint test doc readme-check lock-check package-check build
     @echo "All CI checks passed!"
 
 # Watch for changes and run tests
