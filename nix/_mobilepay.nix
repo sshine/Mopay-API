@@ -20,7 +20,7 @@
 fetchurl {
   name = "mobilepay-10.35.37-arm64.apk";
   url = "https://www.apkmirror.com/apk/vipps-as/mobilepay/mobilepay-10-35-37-release/mobilepay-10-35-37-2-android-apk-download/download/?key=b6466057a1afc1f97e4738f776049cce6af534df";
-  hash = "sha256-2CvQJg13ABnVQHOr+q3udBZM5rlYHrIlaji4mIz5Sys=";
+  hash = "sha256-wp4HDXfDqDVDvcvZc0iEKVxoLx9uyeSPV//DcreHCz4=";
   # APKMirror returns 403 for the default Nixpkgs curl User-Agent.
   curlOptsList = [ "-A" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36" ];
 }
