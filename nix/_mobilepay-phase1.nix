@@ -20,7 +20,7 @@
     url = "https://www.apkmirror.com/apk/vipps-as/mobilepay/mobilepay-10-35-37-release/mobilepay-10-35-37-2-android-apk-download/download/?key=b6466057a1afc1f97e4738f776049cce6af534df";
     # Observed download is currently Cloudflare challenge HTML (~404 KiB), not the APK.
     # Real APK hash (Uptodown): sha256-ZW1eXXHAN10FcG9PZgksRFmzHEpQ25sml1yHO1f+9rA=
-    hash = "sha256-QNouMCYUY7qagY+RYGcOg0UycKCLk6Vqwi9hbBe4ydc=";
+    hash = "sha256-qSG8+3khRTqerHk+cleZ99jJ+PAGaBX2oKriLmGvIhs=";
     # APKMirror returns 403 for the default Nixpkgs curl User-Agent.
     curlOptsList = [ "-A" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36" ];
   };
