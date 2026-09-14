@@ -30,7 +30,7 @@ build:
 doc *args='':
     cargo doc --no-deps --all-features {{args}}
 
-readme_args := "--project-root . --input src/main.rs --template README.tpl"
+readme_args := "--project-root crates/mopay-mcp --input src/main.rs --template ../../README.tpl"
 
 # Regenerate README.md from README.tpl and the CLI docs
 readme:
